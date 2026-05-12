@@ -1,0 +1,65 @@
+spring:
+  application:
+    name: pine-wilt-detection-backend
+
+  # ── 数据库配置（默认H2内存数据库，生产环境改MySQL）──────
+  datasource:
+    url: jdbc:h2:./data/pine_wilt_db;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+  
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql
+      data-locations: classpath:data.sql
+
+  # ── 文件上传配置 ──────────────────────────────────────
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+
+  # ── 静态资源 ──────────────────────────────────────────
+  web:
+    resources:
+      static-locations: classpath:/static/,file:uploads/
+
+server:
+  port: 8080
+  servlet:
+    context-path: /
+
+# ── JWT 配置 ──────────────────────────────────────────
+jwt:
+  secret: pine-wilt-detection-jwt-secret-key-2026
+  expiration: 86400000   # 24小时（毫秒）
+
+# ── AI 推理服务地址 ──────────────────────────────────
+ai:
+  service:
+    url: http://localhost:5001
+
+# ── 文件存储路径 ──────────────────────────────────────
+upload:
+  path: ./uploads
+
+# ── MyBatis-Plus ──────────────────────────────────────
+mybatis-plus:
+  mapper-locations: classpath:/mapper/*.xml
+  type-aliases-package: com.pinewilt.detection.entity
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+# ── 日志 ──────────────────────────────────────────────
+logging:
+  level:
+    com.pinewilt: DEBUG
+    org.springframework.security: INFO
